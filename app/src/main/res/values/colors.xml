@@ -5,4 +5,13 @@
     <color name="colorAccent">#FF4081</color>
     <color name="bg_bubble_self">#62caa6</color>
     <color name="bg_bubble_watbot">#ecf0f1</color>
+    <color name="bg_colorboot">#f50057</color>
+    <color name="bg_color"> #40c4ff</color>
+
+
+
+    <color name="bg_colorusuario">#00e676
+    </color>
+
+
 </resources>

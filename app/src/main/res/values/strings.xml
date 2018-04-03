@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Watson Chabot</string>
-    <string name="what_s_on_your_mind">Enter your query</string>
+    <string name="what_s_on_your_mind">Escribe un mensaje..</string>
+    <string name="email_example_exe_com">Email: example@exe.com</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+    <string name="singin">SingIn</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="CerrarSesion">Cerrar Sesion</string>
+    <string name="LOG_MES">no se logro Cerrar Sesion</string>
+    <string name="rev_log">no se revoco el acceso</string>
+    <string name="salir">srevoke</string>
+    <string name="logoutt">logouttt</string>
+
+    <string name="not_logout">no se pudo cerra sesion</string>
+    <string name="no_task_furebase">No se pudo autenticar firebase</string>
+
 </resources>

@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         inputMessage = (EditText) findViewById(R.id.message);
         btnSend = (ImageButton) findViewById(R.id.btn_send);
-        btnRecord= (ImageButton) findViewById(R.id.btn_record);
+         btnRecord= (ImageButton) findViewById(R.id.btn_record);
         String customFont = "Montserrat-Regular.ttf";
         Typeface typeface = Typeface.createFromAsset(getAssets(), customFont);
         inputMessage.setTypeface(typeface);
@@ -286,9 +286,10 @@ public class MainActivity extends AppCompatActivity {
                 try {
 
                     Conversation service = new Conversation(Conversation.VERSION_DATE_2017_05_26);
-                    service.setUsernameAndPassword(conversation_username, conversation_password);
+                    service.setUsernameAndPassword("3c0df15a-09c7-43cc-8b7a-34e73c947ff2", "MYHzlm2jcSFc");
                     InputData input = new InputData.Builder(inputmessage).build();
-                    MessageOptions options = new MessageOptions.Builder(workspace_id).input(input).context(context).build();
+                    MessageOptions options = new MessageOptions.Builder("5ecb1f61-0310-42f1-bd12-08aa75240b3c" +
+                            "").input(input).context(context).build();
                     MessageResponse response = service.message(options).execute();
 
                     //Passing Context of last conversation

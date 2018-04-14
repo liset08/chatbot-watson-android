@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Watson Text-to-Speech Service on Bluemix
         textToSpeech = new TextToSpeech();
-        textToSpeech.setUsernameAndPassword(TTS_username, TTS_password);
+        textToSpeech.setUsernameAndPassword("83284dba-b6a0-4f9e-bdc0-68159ff9cc27", "XBvZPVVst6GS");
 
 
         int permission = ContextCompat.checkSelfPermission(this,
@@ -184,9 +184,9 @@ public class MainActivity extends AppCompatActivity {
                             streamPlayer = new StreamPlayer();
                             if(audioMessage != null && !audioMessage.getMessage().isEmpty())
                                 //Change the Voice format and choose from the available choices
-                                streamPlayer.playStream(textToSpeech.synthesize(audioMessage.getMessage(), Voice.EN_LISA).execute());
+                                streamPlayer.playStream(textToSpeech.synthesize(audioMessage.getMessage(), Voice.ES_LAURA).execute());
                             else
-                                streamPlayer.playStream(textToSpeech.synthesize("No Text Specified", Voice.EN_LISA).execute());
+                                streamPlayer.playStream(textToSpeech.synthesize("No Text Specified", Voice.ES_LAURA).execute());
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
     private void recordMessage() {
         //mic.setEnabled(false);
         speechService = new SpeechToText();
-        speechService.setUsernameAndPassword(STT_username, STT_password);
+        speechService.setUsernameAndPassword("eaef3e70-5c23-423f-bc3a-2d6f57d908d6", "fjDL6tjeLjn0");
 
 
         if(listening != true) {

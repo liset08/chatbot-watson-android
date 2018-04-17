@@ -2,6 +2,7 @@ package com.example.vmac.WatBot;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -18,8 +19,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.ibm.mobilefirstplatform.clientsdk.android.analytics.api.Analytics;
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.Response;
@@ -85,8 +98,12 @@ public class MainActivity extends AppCompatActivity {
     private SpeakerLabelsDiarization.RecoTokens recoTokens;
     private MicrophoneHelper microphoneHelper;
     private Logger myLogger;
+    private ImageView imageView;
+    private GoogleApiClient googleApiClient;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
-
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +119,16 @@ public class MainActivity extends AppCompatActivity {
         TTS_username = mContext.getString(R.string.TTS_username);
         TTS_password = mContext.getString(R.string.TTS_password);
         analytics_APIKEY = mContext.getString(R.string.mobileanalytics_apikey);
+
+
+
+
+        //Obtener imagen de la autenticacion con firebase
+
+
+
+
+
 
 
         //Bluemix Mobile Analytics
@@ -139,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
         inputMessage = (EditText) findViewById(R.id.message);
         btnSend = (ImageButton) findViewById(R.id.btn_send);
          btnRecord= (ImageButton) findViewById(R.id.btn_record);
+
+
         String customFont = "Montserrat-Regular.ttf";
         Typeface typeface = Typeface.createFromAsset(getAssets(), customFont);
         inputMessage.setTypeface(typeface);
@@ -217,7 +246,15 @@ public class MainActivity extends AppCompatActivity {
                 recordMessage();
             }
         });
-    };
+    }
+
+
+    //metodos de la autenticacion con firebase
+
+
+
+
+
 
     // Speech-to-Text Record Audio permission
     @Override
@@ -340,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
     private void recordMessage() {
         //mic.setEnabled(false);
         speechService = new SpeechToText();
-        speechService.setUsernameAndPassword("eaef3e70-5c23-423f-bc3a-2d6f57d908d6", "fjDL6tjeLjn0");
+        speechService.setUsernameAndPassword("903072b6-0c07-4ddd-9b0c-cf400de2300c", "fveq13HaekBy");
 
 
         if(listening != true) {
@@ -355,13 +392,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }).start();
             listening = true;
-            Toast.makeText(MainActivity.this,"Listening....Click to Stop", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"Escuchando .... Haga clic para detener", Toast.LENGTH_LONG).show();
 
         } else {
             try {
                 microphoneHelper.closeInputStream();
                 listening = false;
-                Toast.makeText(MainActivity.this,"Stopped Listening....Click to Start", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"Dejó de escuchar ... Haga clic para comenzar", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -398,11 +435,11 @@ public class MainActivity extends AppCompatActivity {
         return new RecognizeOptions.Builder()
                 //.continuous(true)
                 .contentType(ContentType.OPUS.toString())
-                //.model("en-UK_NarrowbandModel")
+                .model("es-ES_NarrowbandModel")
                 .interimResults(true)
                 .inactivityTimeout(2000)
                 //TODO: Uncomment this to enable Speaker Diarization
-                //.speakerLabels(true)
+                .speakerLabels(true)
                 .build();
     }
 

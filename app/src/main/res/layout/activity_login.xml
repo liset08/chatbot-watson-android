@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
-    tools:context=".LoginActivity">
+    tools:context=".Activities.LoginActivity">
 
     <ProgressBar
         android:id="@+id/progressbar"
@@ -46,7 +46,7 @@
                     app:srcCompat="@drawable/username" />
 
                 <EditText
-                    android:id="@+id/buscar"
+                    android:id="@+id/et_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -88,7 +88,7 @@
                     app:srcCompat="@drawable/password" />
 
                 <EditText
-                    android:id="@+id/buscar2"
+                    android:id="@+id/et_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -114,7 +114,7 @@
 
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btn_ingresar"
                 android:layout_width="140dp"
 
                 android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
 
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/btn_registrarse"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

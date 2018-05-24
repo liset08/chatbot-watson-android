@@ -1,4 +1,4 @@
-package com.example.vmac.WatBot;
+package com.example.vmac.WatBot.Activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.vmac.WatBot.R;
 
 public class Splach2Activity extends AppCompatActivity {
     private TextView name;

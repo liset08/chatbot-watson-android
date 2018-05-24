@@ -1,38 +1,37 @@
-package com.example.vmac.WatBot;
+package com.example.vmac.WatBot.Fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
+import com.example.vmac.WatBot.Adapter.ChatAdapter;
+import com.example.vmac.WatBot.ClickListener;
+import com.example.vmac.WatBot.Message;
+import com.example.vmac.WatBot.R;
+import com.example.vmac.WatBot.RecyclerTouchListener;
+import com.example.vmac.WatBot.SpeakerLabelsDiarization;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ibm.mobilefirstplatform.clientsdk.android.analytics.api.Analytics;
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.Response;
@@ -45,11 +44,9 @@ import com.ibm.watson.developer_cloud.android.library.audio.utils.ContentType;
 import com.ibm.watson.developer_cloud.conversation.v1.Conversation;
 import com.ibm.watson.developer_cloud.conversation.v1.model.InputData;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageOptions;
-import com.ibm.watson.developer_cloud.conversation.v1.model.MessageRequest;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.RecognizeOptions;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeakerLabel;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechResults;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallback;
 import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
@@ -59,15 +56,12 @@ import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.ibm.watson.developer_cloud.android.library.audio.MicrophoneHelper.REQUEST_PERMISSION;
 
 
-public class MainActivity extends AppCompatActivity {
+public class ChatFragment extends Fragment {
 
 
+    //
     private RecyclerView recyclerView;
     private ChatAdapter mAdapter;
     private ArrayList messageArrayList;
@@ -80,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean initialRequest;
     private boolean permissionToRecordAccepted = false;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-    private static String TAG = "MainActivity";
+    private static String TAG = "ChatFragment";
     private static final int RECORD_REQUEST_CODE = 101;
     private boolean listening = false;
     private SpeechToText speechService;
@@ -105,12 +99,25 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        mContext = getApplicationContext();
+    public ChatFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View v=inflater.inflate(R.layout.fragment_chat, container, false);
+        mContext = getActivity().getApplicationContext();
         conversation_username = mContext.getString(R.string.conversation_username);
         conversation_password = mContext.getString(R.string.conversation_password);
         workspace_id = mContext.getString(R.string.workspace_id);
@@ -121,20 +128,10 @@ public class MainActivity extends AppCompatActivity {
         analytics_APIKEY = mContext.getString(R.string.mobileanalytics_apikey);
 
 
-
-
-        //Obtener imagen de la autenticacion con firebase
-
-
-
-
-
-
-
         //Bluemix Mobile Analytics
-        BMSClient.getInstance().initialize(getApplicationContext(), BMSClient.REGION_US_SOUTH);
+        BMSClient.getInstance().initialize(getActivity().getApplicationContext(), BMSClient.REGION_US_SOUTH);
         //Analytics is configured to record lifecycle events.
-        Analytics.init(getApplication(), "WatBot", analytics_APIKEY, false, Analytics.DeviceEvent.ALL);
+        Analytics.init(getActivity().getApplication(), "WatBot", analytics_APIKEY, false, Analytics.DeviceEvent.ALL);
         //Analytics.send();
         myLogger = Logger.getLogger("myLogger");
         // Send recorded usage analytics to the Mobile Analytics Service
@@ -163,21 +160,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        inputMessage = (EditText) findViewById(R.id.message);
-        btnSend = (ImageButton) findViewById(R.id.btn_send);
-         btnRecord= (ImageButton) findViewById(R.id.btn_record);
+        inputMessage = (EditText) v.findViewById(R.id.message);
+        btnSend = (ImageButton) v.findViewById(R.id.btn_send);
+        btnRecord= (ImageButton)v.findViewById(R.id.btn_record);
 
 
-        String customFont = "Montserrat-Regular.ttf";
-        Typeface typeface = Typeface.createFromAsset(getAssets(), customFont);
-        inputMessage.setTypeface(typeface);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
 
         messageArrayList = new ArrayList<>();
         mAdapter = new ChatAdapter(messageArrayList);
-        microphoneHelper = new MicrophoneHelper(this);
+        microphoneHelper = new MicrophoneHelper(getActivity());
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -192,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         textToSpeech.setUsernameAndPassword("83284dba-b6a0-4f9e-bdc0-68159ff9cc27", "XBvZPVVst6GS");
 
 
-        int permission = ContextCompat.checkSelfPermission(this,
+        int permission = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.RECORD_AUDIO);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
@@ -201,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, final int position) {
                 Thread thread = new Thread(new Runnable() {
@@ -246,16 +241,13 @@ public class MainActivity extends AppCompatActivity {
                 recordMessage();
             }
         });
+        return v;
+
+
     }
 
 
-    //metodos de la autenticacion con firebase
-
-
-
-
-
-
+    //
     // Speech-to-Text Record Audio permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -270,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                         || grantResults[0] !=
                         PackageManager.PERMISSION_GRANTED) {
 
-                    Log.i(TAG, "Permission has been denied by user");
+                    Log.i(TAG, "Premiso denegado por el usuario");
                 } else {
                     Log.i(TAG, "Permission has been granted by user");
                 }
@@ -279,16 +271,16 @@ public class MainActivity extends AppCompatActivity {
 
             case MicrophoneHelper.REQUEST_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission to record audio denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Permission to record audio denied!",Toast.LENGTH_SHORT).show();
                 }
             }
         }
-       // if (!permissionToRecordAccepted ) finish();
+        // if (!permissionToRecordAccepted ) finish();
 
     }
 
     protected void makeRequest() {
-        ActivityCompat.requestPermissions(this,
+        ActivityCompat.requestPermissions(getActivity(),
                 new String[]{Manifest.permission.RECORD_AUDIO},
                 MicrophoneHelper.REQUEST_PERMISSION);
     }
@@ -311,7 +303,8 @@ public class MainActivity extends AppCompatActivity {
             inputMessage.setMessage(inputmessage);
             inputMessage.setId("100");
             this.initialRequest = false;
-            Toast.makeText(getApplicationContext(),"Tap on the message for Voice",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"Tap on the message for Voice",Toast.LENGTH_SHORT).show();
+
 
         }
 
@@ -350,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                             messageArrayList.add(outMessage);
                         }
 
-                        runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             public void run() {
                                 mAdapter.notifyDataSetChanged();
                                 if (mAdapter.getItemCount() > 1) {
@@ -379,26 +372,29 @@ public class MainActivity extends AppCompatActivity {
         speechService = new SpeechToText();
         speechService.setUsernameAndPassword("903072b6-0c07-4ddd-9b0c-cf400de2300c", "fveq13HaekBy");
 
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
         if(listening != true) {
             capture = microphoneHelper.getInputStream(true);
             new Thread(new Runnable() {
                 @Override public void run() {
                     try {
-                        speechService.recognizeUsingWebSocket(capture, getRecognizeOptions(), new MicrophoneRecognizeDelegate());
+                        speechService.recognizeUsingWebSocket(capture, getRecognizeOptions(),new MicrophoneRecognizeDelegate());
                     } catch (Exception e) {
                         showError(e);
                     }
                 }
             }).start();
             listening = true;
-            Toast.makeText(MainActivity.this,"Escuchando .... Haga clic para detener", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"Escuchando .... Haga clic para detener",Toast.LENGTH_SHORT).show();
+
 
         } else {
             try {
                 microphoneHelper.closeInputStream();
                 listening = false;
-                Toast.makeText(MainActivity.this,"Dejó de escuchar ... Haga clic para comenzar", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Dejó de escuchar ... Haga clic para comenzar",Toast.LENGTH_SHORT).show();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -413,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean checkInternetConnection() {
         // get Connectivity Manager object to check connection
         ConnectivityManager cm =
-                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
@@ -424,7 +420,8 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         else {
-            Toast.makeText(this, " No Internet Connection available ", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity()," No Internet Connection available",Toast.LENGTH_SHORT).show();
+
             return false;
         }
 
@@ -492,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showMicText(final String text) {
-        runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override public void run() {
                 inputMessage.setText(text);
             }
@@ -500,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enableMicButton() {
-        runOnUiThread(new Runnable() {
+        getActivity(). runOnUiThread(new Runnable() {
             @Override public void run() {
                 btnRecord.setEnabled(true);
             }
@@ -508,9 +505,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showError(final Exception e) {
-        runOnUiThread(new Runnable() {
+        getActivity(). runOnUiThread(new Runnable() {
             @Override public void run() {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
                 e.printStackTrace();
             }
         });
@@ -518,7 +515,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+    }
+
+    //////////////////////777
+
+
+
 }
-
-
-

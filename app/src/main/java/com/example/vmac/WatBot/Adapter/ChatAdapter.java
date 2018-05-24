@@ -1,4 +1,4 @@
-package com.example.vmac.WatBot;
+package com.example.vmac.WatBot.Adapter;
 
 /**
  * Created by VMac on 17/11/16.
@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
+import com.example.vmac.WatBot.Message;
+import com.example.vmac.WatBot.R;
 
 import java.util.ArrayList;
 

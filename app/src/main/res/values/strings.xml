@@ -16,4 +16,7 @@
     <string name="not_logout">no se pudo cerra sesion</string>
     <string name="no_task_furebase">No se pudo autenticar firebase</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

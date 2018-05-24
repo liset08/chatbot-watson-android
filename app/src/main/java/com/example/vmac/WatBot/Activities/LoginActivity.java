@@ -1,4 +1,4 @@
-package com.example.vmac.WatBot;
+package com.example.vmac.WatBot.Activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -7,11 +7,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.vmac.WatBot.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -27,6 +34,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -39,8 +49,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     public static final int SING_IN_COD = 777;
     public static final int SING_IN_COD_FACEBOOK = 1000;
-
-
+private EditText etusuario,etpassword;
+JSONArray ja;
+Button btnIngresar;
+    String nombres;
     //clientes interctuanc¡do con el google api
     private GoogleApiClient googleApiClient;
 
@@ -49,15 +61,83 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        etusuario=(EditText)findViewById(R.id.et_username);
+        etpassword=(EditText)findViewById(R.id.et_password);
+
         title = (TextView) findViewById(R.id.title);
+btnIngresar=(Button) findViewById(R.id.btn_ingresar);
 
+btnIngresar.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
 
+        ConsultaPass("http://18.236.181.68/ejemplologin/consultarusuario.php?user="+etusuario.getText().toString());
+    }
+});
 
+//cambiar fuente de los textos
         Typeface face=Typeface.createFromAsset(getAssets(),"Juicy Fruity.ttf");
         title.setTypeface(face);
         initGoogleSignIn();
     }
 
+//metodo para la conexion y consulta de un usuario
+    private void ConsultaPass(String URL) {
+
+        Log.i("url", "" + URL);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    ja = new JSONArray(response);
+                    nombres = ja.getString(0);
+                    String contra = ja.getString(1);
+
+                    if (contra.equals(etpassword.getText().toString())) {
+
+
+
+                        Toast.makeText(getApplicationContext(), "Bienvenido", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
+                        //mandar datos a otro main
+                        String auxNombre=nombres.toString();
+                        intent.putExtra("nombre",auxNombre);
+                        startActivity(intent);
+                        //   nombre.setText(nombres);
+
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "verifique su contraseña", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                    Toast.makeText(getApplicationContext(), "El usuario no existe en la base de datos", Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(stringRequest);
+
+
+    }
+
+
+
+//
     private void initGoogleSignIn() {
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -150,7 +230,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void goMainScreem() {
 
-        Intent intent = new Intent(this, MainActivity.class);   //
+        Intent intent = new Intent(this, PrincipalActivity.class);   //
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

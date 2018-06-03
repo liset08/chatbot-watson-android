@@ -9,16 +9,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.vmac.PfrFragment;
+import com.example.vmac.WatBot.Fragments.CarrerasTecnFragment;
+import com.example.vmac.WatBot.Fragments.PfrFragment;
 import com.example.vmac.WatBot.Fragments.ChatFragment;
+import com.example.vmac.WatBot.Fragments.CursosFragment;
 import com.example.vmac.WatBot.R;
 
 public class PrincipalActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
+    private Button  hora;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
         // Set DrawerLayout
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
 
         // Set drawer toggle icon
       /*  final ActionBar ab = getSupportActionBar();
@@ -52,18 +57,22 @@ public class PrincipalActivity extends AppCompatActivity {
                 // Do action by menu item id
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
-                switch (menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
                     case R.id.nav_home:
-                        Toast.makeText(PrincipalActivity.this, "Go home...", Toast.LENGTH_SHORT).show();
+                        CursosFragment fragment2 = new CursosFragment();
+                        fragmentManager.beginTransaction().replace(R.id.main_content, fragment2).addToBackStack("tag").commit();
                         break;
                     case R.id.nav_carprof:
                         PfrFragment fragment1 = new PfrFragment();
-                        fragmentManager.beginTransaction().replace(R.id.main_content, fragment1).addToBackStack("tag").commit();                                    break;
+                        fragmentManager.beginTransaction().replace(R.id.main_content, fragment1).addToBackStack("tag").commit();
+                        break;
                     case R.id.nav_gallery:
                         ChatFragment fragment = new ChatFragment();
-                        fragmentManager.beginTransaction().replace(R.id.main_content, fragment).addToBackStack("tag").commit();                        break;
+                        fragmentManager.beginTransaction().replace(R.id.main_content, fragment).addToBackStack("tag").commit();
+                        break;
                     case R.id.nav_locations:
-                        Toast.makeText(PrincipalActivity.this, "Go sedes", Toast.LENGTH_SHORT).show();
+                        CarrerasTecnFragment fragment3 = new CarrerasTecnFragment();
+                        fragmentManager.beginTransaction().replace(R.id.main_content, fragment3).addToBackStack("tag").commit();
                         break;
 
                     case R.id.nav_logout:
@@ -86,6 +95,10 @@ public class PrincipalActivity extends AppCompatActivity {
 
         TextView emailText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.menu_email);
         emailText.setText("liset.cayhualla@tecsup.edu.pe");
+
+        //  LocalDate  ahora = LocalDate.now();
+        //System.out.println(ahora);
+
 
     }
 

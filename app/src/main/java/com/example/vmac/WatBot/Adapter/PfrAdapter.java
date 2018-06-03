@@ -1,5 +1,7 @@
 package com.example.vmac.WatBot.Adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.vmac.WatBot.Activities.DetallesPfr;
 import com.example.vmac.WatBot.Model.Pfr;
 import com.example.vmac.WatBot.R;
 import com.example.vmac.WatBot.Service.ApiService;
@@ -22,8 +25,11 @@ import java.util.List;
 public class PfrAdapter extends RecyclerView.Adapter<PfrAdapter.ViewHolder> {
 
     private List<Pfr> pfr;
-    public PfrAdapter(){
+    private Activity activity;
+
+    public PfrAdapter(Activity activity){
         this.pfr = new ArrayList<>();
+        this.activity = activity;
     }
     public void setProductos(List<Pfr> pfr){
         this.pfr = pfr;
@@ -42,7 +48,6 @@ public class PfrAdapter extends RecyclerView.Adapter<PfrAdapter.ViewHolder> {
         super(itemView);
 
         nombre = itemView.findViewById(R.id.nombre_text);
-        description = itemView.findViewById(R.id.carreras_text);
         sede = itemView.findViewById(R.id.sede_text);
         fotoImage = itemView.findViewById(R.id.foto_image);
 
@@ -57,15 +62,24 @@ public class PfrAdapter extends RecyclerView.Adapter<PfrAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(PfrAdapter.ViewHolder viewHolder, int position) {
-        Pfr pfr = this.pfr.get(position);
+        final Pfr pfr = this.pfr.get(position);
 
         viewHolder.nombre.setText(pfr.getNombre());
-        viewHolder.description.setText(pfr.getDescripcion());
         viewHolder.sede.setText( pfr.getSede());
 
 
         String url = ApiService.API_BASE_URL + "/images/" + pfr.getImg_carrera();
+
         Picasso.with(viewHolder.itemView.getContext()).load(url).into(viewHolder.fotoImage);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, DetallesPfr.class);
+                intent.putExtra("id", pfr.getId());
+                activity.startActivity(intent);
+            }
+        });
 
 
     }

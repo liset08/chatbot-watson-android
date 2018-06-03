@@ -11,7 +11,9 @@ public class Pfr {
     public String toString() {
         return "Pfr{" +
                 "img_carrera='" + img_carrera + '\'' +
+                ", img_malla='" + img_malla + '\'' +
                 ", Objetivo='" + Objetivo + '\'' +
+                ", Objetivo1='" + Objetivo1 + '\'' +
                 ", Sede='" + Sede + '\'' +
                 ", Duracion=" + Duracion +
                 ", Descripcion='" + Descripcion + '\'' +
@@ -21,12 +23,22 @@ public class Pfr {
     }
 
     private String img_carrera;
+    private String img_malla;
     private String Objetivo;
+    private String Objetivo1;
     private String Sede;
     private int Duracion;
     private String Descripcion;
     private String nombre;
     private int id;
+
+    public String getObjetivo1() {
+        return Objetivo1;
+    }
+
+    public void setObjetivo1(String objetivo1) {
+        Objetivo1 = objetivo1;
+    }
 
     public String getImg_carrera() {
         return img_carrera;
@@ -82,5 +94,13 @@ public class Pfr {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getImg_malla() {
+        return img_malla;
+    }
+
+    public void setImg_malla(String img_malla) {
+        this.img_malla = img_malla;
     }
 }

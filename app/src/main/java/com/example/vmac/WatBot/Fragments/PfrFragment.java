@@ -1,4 +1,4 @@
-package com.example.vmac;
+package com.example.vmac.WatBot.Fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -50,7 +50,7 @@ public class PfrFragment extends Fragment {
         pfrList = d.findViewById(R.id.recyclerview);
         pfrList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        pfrList.setAdapter(new PfrAdapter());
+        pfrList.setAdapter(new PfrAdapter(getActivity()));
 
         initialize();
 
@@ -105,10 +105,6 @@ public class PfrFragment extends Fragment {
         });
                      }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-
-    }
 
     @Override
     public void onAttach(Context context) {

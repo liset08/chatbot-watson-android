@@ -18,9 +18,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.vmac.WatBot.Adapter.ChatAdapter;
@@ -55,7 +57,10 @@ import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class ChatFragment extends Fragment {
@@ -66,6 +71,8 @@ public class ChatFragment extends Fragment {
     private ChatAdapter mAdapter;
     private ArrayList messageArrayList;
     private EditText inputMessage;
+    private TextView hora;
+
     private ImageButton btnSend;
     private ImageButton btnRecord;
     //private Map<String,Object> context = new HashMap<>();
@@ -295,6 +302,7 @@ public class ChatFragment extends Fragment {
             inputMessage.setId("1");
             messageArrayList.add(inputMessage);
             myLogger.info("Sending a message to Watson Conversation Service");
+
 
         }
         else

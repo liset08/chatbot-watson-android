@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <item
         android:id="@+id/menu_home"
-        android:title="Home"
-
-        android:fillColor="#FFFF"/>
+        android:checkable="true"
+        android:icon="@drawable/cortos"
+        android:fillColor="#FFFF"
+        android:title="Cursos Cortos" />
 
 
     <item
         android:id="@+id/menu_favorite"
-        android:title="Chat"
+        android:title="Programas Integrales"
+        android:icon="@drawable/integrales"
+
+        android:checkable="true"
+
         android:fillColor="#FFFF"/>
 
-    <item
-        android:id="@+id/menu_delete"
-        android:title="Sedes"
-        android:fillColor="#FFFF"
 
-        />
 </menu>

@@ -9,9 +9,14 @@
     <color name="bg_color"> #40c4ff</color>
     <color name="bg_colorbot"> #d6d6d6</color>
 
-    #d6d6d6
-
-
+    <color name="primary">#FF5722</color>
+    <color name="primary_dark">#E64A19</color>
+    <color name="primary_light">#FFCCBC</color>
+    <color name="accent">#00BCD4</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
 
     <color name="bg_colorusuario">#00e676
     </color>
